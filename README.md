@@ -22,6 +22,8 @@ To tweak the appearance, just change the css on the top of the index.coffee file
 
 ![alt tag](http://brunopires.pt/Content/images/jenkins-widget.jpg)
 
+#Version
+version 0.2
 
 ## Credits
 Original icons by Erik Flowers

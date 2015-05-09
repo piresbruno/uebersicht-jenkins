@@ -62,7 +62,7 @@ style: """
 render: (output) ->
 	
 	#change to your CI server name
-	machine = 'R2D2 jobs'
+	machine = 'Luke Skywalker'
 	
 	"""    
     <table id="table">
@@ -105,13 +105,20 @@ update: (output, dom) ->
 	#we parse the json response
 	data = JSON.parse(output)
 	
+	#log parsed data
+	console.log(data)
+	
 	#and teh we append the new data
 	for job in data.jobs then do =>
 		$(dom).find('#data').append @renderInfo(job.displayName, 
-												@getIcon(job.healthReport[1].score),
+												@getIcon(job.healthReport),
 												job.lastBuild.building && 'running' || 'finished',
-												job.lastBuild.result.toLowerCase(),
-												@convertMilliseconds(job.lastBuild.duration), 
+												if job.lastBuild.result == null 
+												then 'n/a' 
+												else  job.lastBuild.result.toLowerCase(),
+												if job.lastBuild.result == null  
+												then 'n/a'
+												else @convertMilliseconds(job.lastBuild.duration), 
 												@calculateDateDiffToNowUTC(job.lastSuccessfulBuild.timestamp), 
 												@calculateDateDiffToNowUTC(job.lastUnsuccessfulBuild.timestamp))
 		
@@ -151,7 +158,12 @@ calculateDateDiffToNowUTC: (dateUTC) ->
 	
 	
 #get's the weather icon	
-getIcon: (healthStatus) ->
+getIcon: (healthReport) ->
+	
+	healthStatus = healthReport[0].score
+	if healthStatus > healthReport[1].score
+		healthStatus = healthReport[1].score
+	
 	if healthStatus <= 20
 		@iconMapping[11] 								#tornado	
 	else if healthStatus > 20 && healthStatus <= 40
@@ -162,6 +174,7 @@ getIcon: (healthStatus) ->
 		@iconMapping[30] 								#partly cloudy	
 	else if healthStatus > 80
 		@iconMapping[32] 								#sunny	
+	
 	
 	
 #weather icon mapping	
