@@ -8,10 +8,10 @@ serverUrlNoAuth 	= 'jenkins url'			# with http://
 # ------------------------------ END CONFIG --------------------------
 
 # comment when server has authentication
-command: "curl -sS #{user}:#{token}@#{server}/api/json?depth=2&tree=jobs[displayName,lastBuild[builOn,duration,timestamp,result]]&exclude=hudson/job[lastBuild[result=%27SUCCESS%27]]"
+command: "curl -sS #{user}:#{token}@#{serverUrlWithAuth}/api/json?depth=2&tree=jobs[displayName,lastBuild[builOn,duration,timestamp,result]]&exclude=hudson/job[lastBuild[result=%27SUCCESS%27]]"
 
 # uncomment when server has no authentication
-# command: "curl -sS @#{server}/api/json?depth=2&tree=jobs[displayName,lastBuild[builOn,duration,timestamp,result]]&exclude=hudson/job[lastBuild[result=%27SUCCESS%27]]"
+# command: "curl -sS @#{serverUrlNoAuth}/api/json?depth=2&tree=jobs[displayName,lastBuild[builOn,duration,timestamp,result]]&exclude=hudson/job[lastBuild[result=%27SUCCESS%27]]"
 
 
 
