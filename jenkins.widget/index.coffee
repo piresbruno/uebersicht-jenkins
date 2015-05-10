@@ -1,13 +1,13 @@
 # ------------------------------ CONFIG ------------------------------
 
-user				= 'your username'       # your jenkins login username, change it if you have auth in jenkins
-token 				= 'your token'          # your jenkins access token, change it if you have auth in jenkins
+user                = 'your username'       # your jenkins login username, change it if you have auth in jenkins
+token               = 'your token'          # your jenkins access token, change it if you have auth in jenkins
 serverUrlWithAuth 	= 'jenkins url'			# without http://
 serverUrlNoAuth 	= 'jenkins url'			# with http://
 
 # ------------------------------ END CONFIG --------------------------
 
-# comment when server has authentication
+# uncomment when server has authentication
 command: "curl -sS #{user}:#{token}@#{serverUrlWithAuth}/api/json?depth=2&tree=jobs[displayName,lastBuild[builOn,duration,timestamp,result]]&exclude=hudson/job[lastBuild[result=%27SUCCESS%27]]"
 
 # uncomment when server has no authentication
