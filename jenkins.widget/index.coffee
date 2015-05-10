@@ -1,13 +1,17 @@
 # ------------------------------ CONFIG ------------------------------
 
-user	= 'your username'
-token 	= 'your token'
-server 	= 'jenkins url'
+user				= 'your username'
+token 				= 'your token'
+serverUrlWithAuth 	= 'jenkins url'			# without http://
+serverUrlNoAuth 	= 'jenkins url'			# with http://
 
 # ------------------------------ END CONFIG --------------------------
 
-
+# comment when server has authentication
 command: "curl -sS #{user}:#{token}@#{server}/api/json?depth=2&tree=jobs[displayName,lastBuild[builOn,duration,timestamp,result]]&exclude=hudson/job[lastBuild[result=%27SUCCESS%27]]"
+
+# uncomment when server has no authentication
+# command: "curl -sS @#{server}/api/json?depth=2&tree=jobs[displayName,lastBuild[builOn,duration,timestamp,result]]&exclude=hudson/job[lastBuild[result=%27SUCCESS%27]]"
 
 
 
