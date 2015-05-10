@@ -1,7 +1,7 @@
 # ------------------------------ CONFIG ------------------------------
 
-user				= 'your username'
-token 				= 'your token'
+user				= 'your username'       # your jenkins login username, change it if you have auth in jenkins
+token 				= 'your token'          # your jenkins access token, change it if you have auth in jenkins
 serverUrlWithAuth 	= 'jenkins url'			# without http://
 serverUrlNoAuth 	= 'jenkins url'			# with http://
 
@@ -108,9 +108,6 @@ update: (output, dom) ->
 	
 	#we parse the json response
 	data = JSON.parse(output)
-	
-	#log parsed data
-	console.log(data)
 	
 	#and teh we append the new data
 	for job in data.jobs then do =>
