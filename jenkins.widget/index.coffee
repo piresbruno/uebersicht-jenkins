@@ -1,13 +1,17 @@
 # ------------------------------ CONFIG ------------------------------
 
-user	= 'your username'
-token 	= 'your token'
-server 	= 'jenkins url'
+user                = 'your username'       # your jenkins login username, change it if you have auth in jenkins
+token               = 'your token'          # your jenkins access token, change it if you have auth in jenkins
+serverUrlWithAuth 	= 'jenkins url'			# without http://
+serverUrlNoAuth 	= 'jenkins url'			# with http://
 
 # ------------------------------ END CONFIG --------------------------
 
+# uncomment when server has authentication
+command: "curl -sS #{user}:#{token}@#{serverUrlWithAuth}/api/json?depth=2&tree=jobs[displayName,lastBuild[builOn,duration,timestamp,result]]&exclude=hudson/job[lastBuild[result=%27SUCCESS%27]]"
 
-command: "curl -sS #{user}:#{token}@#{server}/api/json?depth=2&tree=jobs[displayName,lastBuild[builOn,duration,timestamp,result]]&exclude=hudson/job[lastBuild[result=%27SUCCESS%27]]"
+# uncomment when server has no authentication
+# command: "curl -sS @#{serverUrlNoAuth}/api/json?depth=2&tree=jobs[displayName,lastBuild[builOn,duration,timestamp,result]]&exclude=hudson/job[lastBuild[result=%27SUCCESS%27]]"
 
 
 
@@ -104,9 +108,6 @@ update: (output, dom) ->
 	
 	#we parse the json response
 	data = JSON.parse(output)
-	
-	#log parsed data
-	console.log(data)
 	
 	#and teh we append the new data
 	for job in data.jobs then do =>
