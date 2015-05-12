@@ -160,8 +160,12 @@ calculateDateDiffToNowUTC: (dateUTC) ->
 #get's the weather icon	
 getIcon: (healthReport) ->
 	
+	if healthReport.lenght == 0
+		@iconMapping[11] 
+		return
+	
 	healthStatus = healthReport[0].score
-	if healthStatus > healthReport[1].score
+	if  healthReport.lenght > 1 && healthStatus > healthReport[1].score
 		healthStatus = healthReport[1].score
 	
 	if healthStatus <= 20
