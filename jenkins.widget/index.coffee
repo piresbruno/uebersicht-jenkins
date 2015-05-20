@@ -120,8 +120,12 @@ update: (output, dom) ->
 												if job.lastBuild.result == null  
 												then 'n/a'
 												else @convertMilliseconds(job.lastBuild.duration), 
-												@calculateDateDiffToNowUTC(job.lastSuccessfulBuild.timestamp), 
-												@calculateDateDiffToNowUTC(job.lastUnsuccessfulBuild.timestamp))
+												if job.lastSuccessfulBuild == null
+												then 'N/A'
+												else @calculateDateDiffToNowUTC(job.lastSuccessfulBuild.timestamp), 
+												if job.lastUnsuccessfulBuild == null
+												then 'N/A'
+												else @calculateDateDiffToNowUTC(job.lastUnsuccessfulBuild.timestamp))
 		
 		
 #converts milliseconds to meaningful data
