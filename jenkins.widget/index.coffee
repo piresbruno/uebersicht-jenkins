@@ -109,9 +109,11 @@ update: (output, dom) ->
 	#we parse the json response
 	data = JSON.parse(output)
 	
-	#and teh we append the new data
+	#and then we append the new data
 	for job in data.jobs then do =>
-		$(dom).find('#data').append @renderInfo(job.displayName, 
+		# if there is a project that has never run before, we don't care about it
+		if job.lastBuild != null 
+		then $(dom).find('#data').append @renderInfo(job.displayName, 
 												@getIcon(job.healthReport),
 												job.lastBuild.building && 'running' || 'finished',
 												if job.lastBuild.result == null 
