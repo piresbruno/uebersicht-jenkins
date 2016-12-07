@@ -65,7 +65,7 @@ style: """
 render: (output) ->
 	
 	#change to your CI server name
-	machine = 'Codebuilder'
+	machine = 'Luke Skywalker'
 	
 	"""   
 	<div id="jenkins"> 
