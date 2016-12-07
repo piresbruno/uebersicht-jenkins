@@ -4,6 +4,7 @@ user                = 'your username'       # your jenkins login username, chang
 token               = 'your token'          # your jenkins access token, change it if you have auth in jenkins
 serverUrlWithAuth 	= 'jenkins url'			# without http://
 serverUrlNoAuth 	= 'jenkins url'			# with http://
+projectToShow 		= []					# project filter
 
 # ------------------------------ END CONFIG --------------------------
 
@@ -12,8 +13,6 @@ command: "curl -sS #{user}:#{token}@#{serverUrlWithAuth}/api/json?depth=2&tree=j
 
 # uncomment when server has no authentication
 # command: "curl -sS @#{serverUrlNoAuth}/api/json?depth=2&tree=jobs[displayName,lastBuild[builOn,duration,timestamp,result]]&exclude=hudson/job[lastBuild[result=%27SUCCESS%27]]"
-
-
 
 refreshFrequency: 60000 # ms
 
@@ -26,31 +25,31 @@ style: """
 	@font-face
     	font-family Weather
     	src url(jenkins.widget/icons.svg) format('svg')
-    p 
+    #jenkins p 
         font-size: 16px
-	td
+	#jenkins td
 		font-size: 14px
 		font-weight: 200
 		padding-right: 18px
 		height: 35px;
-	th
+	#jenkins th
 		font-size: 14px
 		font-weight: 200
 		padding-right: 18px
 		text-align: left
 	
-	#table
+	#jenkins > #table
   		border-collapse:collapse 
   		
-	#table thead th
+	#jenkins > #table thead th
 		padding-bottom: 10px
 
-	#table thead tr th
+	#jenkins > #table thead tr th
 		border-bottom: 1px solid #fff
 		padding-bottom: 10px
 
 
-	.icon
+	.jenkins-icon
     	display: inline-block
     	font-family: Weather
     	vertical-align: top
@@ -66,24 +65,26 @@ style: """
 render: (output) ->
 	
 	#change to your CI server name
-	machine = 'Luke Skywalker'
+	machine = 'Codebuilder'
 	
-	"""    
-    <table id="table">
-		<thead>
-			<tr>
-				<th>#{machine}</th>
-				<th></th>
-				<th>status</th>
-				<th>result</th>
-				<th>duration</th>
-				<th>last success</th>
-				<th>last failure</th>
-			</tr> 
-		</thead>
-		<tbody class="separator" id="data">
-		</tbody>
-    </table>
+	"""   
+	<div id="jenkins"> 
+		<table id="table">
+			<thead>
+				<tr>
+					<th>#{machine}</th>
+					<th></th>
+					<th>status</th>
+					<th>result</th>
+					<th>duration</th>
+					<th>last success</th>
+					<th>last failure</th>
+				</tr> 
+			</thead>
+			<tbody class="separator" id="data">
+			</tbody>
+		</table>
+	</div>
 	"""
 	
 	
@@ -92,7 +93,7 @@ renderInfo: (project, health, status, result, duration, lastSuccess, lastFailure
 	"""
     	<tr>
 			<td>#{project}</td>
-			<td><div class="icon">#{health}</div></td>
+			<td><div class="jenkins-icon">#{health}</div></td>
 			<td>#{status}</td>
 			<td>#{result}</td>
 			<td>#{duration}</td>
@@ -112,7 +113,9 @@ update: (output, dom) ->
 	#and then we append the new data
 	for job in data.jobs then do =>
 		# if there is a project that has never run before, we don't care about it
+		# job.displayName in projectToShow
 		if job.lastBuild != null 
+		then if projectToShow.length == 0 || job.displayName in projectToShow
 		then $(dom).find('#data').append @renderInfo(job.displayName, 
 												@getIcon(job.healthReport),
 												job.lastBuild.building && 'running' || 'finished',
@@ -166,7 +169,6 @@ calculateDateDiffToNowUTC: (dateUTC) ->
 	
 #get's the weather icon	
 getIcon: (healthReport) ->
-	
 	if healthReport.lenght == 0
 		@iconMapping[11] 
 		return
@@ -174,7 +176,7 @@ getIcon: (healthReport) ->
 	healthStatus = healthReport[0].score
 	if  healthReport.lenght > 1 && healthStatus > healthReport[1].score
 		healthStatus = healthReport[1].score
-	
+
 	if healthStatus <= 20
 		@iconMapping[11] 								#tornado	
 	else if healthStatus > 20 && healthStatus <= 40
